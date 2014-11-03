@@ -1,0 +1,25 @@
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/vtk13/mvc"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/vtk13/lib-xdebug-trace"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Vtk13\\TraceView\\": "src/TraceView",
+            "Vtk13\\LibXdebugTrace\\": "lib/lib-xdebug-trace/src"
+        }
+    },
+    "require": {
+        "vtk13/mvc": "0.1",
+        "vtk13/lib-xdebug-trace": "0.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    }
+}

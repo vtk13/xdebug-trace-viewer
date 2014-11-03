@@ -1,0 +1,56 @@
+.sub-list {
+    display: none;
+}
+.sub-list .list-group {
+    margin-bottom: 0;
+}
+
+.toggler {
+    cursor: pointer;
+}
+
+.pre {
+    white-space: pre;
+    font-family: 'Courier New' monospace;
+}
+.pre .sub-list {
+    margin-left: 15px;
+}
+.covered {
+    background: #0f0;
+}
+.highlight {
+    background: #f80;
+}
+
+.line {
+    position: relative;
+    overflow: visible;
+}
+.line .line-menu {
+    white-space: normal;
+    position: absolute;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 400px;
+    display: none;
+    padding: 10px;
+    background: white;
+    border: solid 1px #666;
+    border-radius: 10px;
+}
+.open {
+    display: block;
+}
+
+.a {
+    cursor: pointer;
+    text-decoration: underline;
+}
+.a:hover {
+    text-decoration: none;
+}
+.a.line-menu-close {
+    text-decoration: none;
+}
