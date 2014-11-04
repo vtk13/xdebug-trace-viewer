@@ -14,7 +14,6 @@ require.config({
 
 require(['jquery', 'utils', 'ajax-api', 'bootstrap', 'jquery-ui'], function($, utils, api) {
     $(function() {
-        console.log(window.location.hash);
         $(window.location.hash).addClass('highlight');
 
         $(window).on('hashchange', function() {
@@ -34,22 +33,42 @@ require(['jquery', 'utils', 'ajax-api', 'bootstrap', 'jquery-ui'], function($, u
         $('.view-level-down').click(function() {
             api.TraceLevelDown($(this).parents('.line-menu').hide().data());
         });
+        $('.view-all-calls').click(function() {
+            api.TraceAllCall($(this).parents('.line-menu').hide().data());
+        });
         $('.view-call-tree').click(function() {
             api.TraceCallTree($(this).parents('.line-menu').hide().data());
         });
 
-        $('body').on('click', '.toggler', function() {
-            var self = $(this);
-            if (self.hasClass('glyphicon-plus')) {
-                self.hasClass('store') && window.localStorage.setItem(self.attr('id'), 1);
-                self.parent().parent().children('.sub-list').addClass('open');
-                self.removeClass('glyphicon-plus').addClass('glyphicon-minus');
-            } else {
-                self.hasClass('store') && window.localStorage.removeItem(self.attr('id'));
-                self.parent().parent().children('.sub-list').removeClass('open');
-                self.removeClass('glyphicon-minus').addClass('glyphicon-plus');
-            }
-        });
+        $('body')
+            .on('click', '.collapse-all', function() {
+                $(this).parents('.call-hierarchy').find('.toggler').each(function() {
+                    var self = $(this);
+                    self.hasClass('store') && window.localStorage.removeItem(self.attr('id'));
+                    self.parent().parent().children('.sub-list').removeClass('open');
+                    self.removeClass('glyphicon-minus').addClass('glyphicon-plus');
+                });
+            })
+            .on('click', '.expand-all', function() {
+                $(this).parents('.call-hierarchy').find('.toggler').each(function() {
+                    var self = $(this);
+                    self.hasClass('store') && window.localStorage.setItem(self.attr('id'), 1);
+                    self.parent().parent().children('.sub-list').addClass('open');
+                    self.removeClass('glyphicon-plus').addClass('glyphicon-minus');
+                });
+            })
+            .on('click', '.toggler', function() {
+                var self = $(this);
+                if (self.hasClass('glyphicon-plus')) {
+                    self.hasClass('store') && window.localStorage.setItem(self.attr('id'), 1);
+                    self.parent().parent().children('.sub-list').addClass('open');
+                    self.removeClass('glyphicon-plus').addClass('glyphicon-minus');
+                } else {
+                    self.hasClass('store') && window.localStorage.removeItem(self.attr('id'));
+                    self.parent().parent().children('.sub-list').removeClass('open');
+                    self.removeClass('glyphicon-minus').addClass('glyphicon-plus');
+                }
+            });
         $('.toggler').each(function() {
             var self = $(this);
             if (window.localStorage.getItem(self.attr('id')) == 1) {

@@ -4,6 +4,6 @@
         <?php include 'templates/widgets/file-hierarchy.php'; ?>
     </div>
     <div class="col-md-8">
-        <?php include 'templates/widgets/file-coverage.php'; ?>
+        <?php include 'templates/widgets/search-results.php'; ?>
     </div>
 </div>

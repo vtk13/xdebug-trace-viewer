@@ -5,6 +5,7 @@ use Vtk13\LibXdebugTrace\FileUtil\FilesManager;
 use Vtk13\LibXdebugTrace\Parser\Parser;
 use Vtk13\LibXdebugTrace\Trace\Line;
 use Vtk13\LibXdebugTrace\Trace\Node;
+use Vtk13\Mvc\Exception\RouteNotFoundException;
 use Vtk13\Mvc\Handlers\AbstractController;
 use Vtk13\Mvc\Http\JsonResponse;
 
@@ -23,6 +24,86 @@ class TraceController extends AbstractController
     public function viewGET()
     {
 
+    }
+
+    public function callsGET()
+    {
+        $fm = new FilesManager();
+        if (empty($_GET['trace']) || empty($file = $fm->getTraceFile($_GET['trace']))) {
+            throw new RouteNotFoundException("Trace {$_GET['trace']} not found in {$fm->directory}");
+        }
+
+        $file = isset($_GET['file']) ? $_GET['file'] : null;
+        $line = isset($_GET['line']) ? $_GET['line'] : null;
+
+        $nodes = array();
+
+        $parser = new Parser();
+        $trace = $parser->parse($fm->getTraceFile($_GET['trace']));
+        $trace->traverse(function(Node $node) use ($file, $line, &$nodes) {
+            if ($node->file == $file && $node->line == $line) {
+                $nodes[] = $node;
+            }
+        });
+
+        return array(
+            'traceName' => $_GET['trace'],
+            'nodes'     => $nodes,
+        );
+    }
+
+    public function callGET()
+    {
+        $fm = new FilesManager();
+        if (empty($_GET['trace']) || empty($file = $fm->getTraceFile($_GET['trace']))) {
+            throw new RouteNotFoundException("Trace {$_GET['trace']} not found in {$fm->directory}");
+        }
+
+        $id = isset($_GET['id']) ? $_GET['id'] : null;
+
+        $found = null;
+        $parser = new Parser();
+        $trace = $parser->parse($fm->getTraceFile($_GET['trace']));
+        $trace->traverse(function(Node $node) use ($id, &$found) {
+            if ($node->callId == $id) {
+                $found = $node;
+            }
+        });
+
+        return array(
+            'traceName' => $_GET['trace'],
+            'node'      => $found,
+        );
+    }
+
+    public function searchGET()
+    {
+        $fm = new FilesManager();
+        if (empty($_GET['trace']) || empty($file = $fm->getTraceFile($_GET['trace']))) {
+            throw new RouteNotFoundException("Trace {$_GET['trace']} not found in {$fm->directory}");
+        }
+
+        $term = isset($_GET['term']) ? $_GET['term'] : null;
+        $mod = isset($_GET['mod']) ? $_GET['mod'] : null;
+
+        $nodes = array();
+
+        if ($term) {
+            $term = preg_quote($term, '~');
+            $parser = new Parser();
+            $trace = $parser->parse($fm->getTraceFile($_GET['trace']));
+            $trace->traverse(function(Node $node) use ($term, $mod, &$nodes) {
+                if (count($nodes) < 200 && preg_match("~{$term}~{$mod}", $node->function)) {
+                    $nodes[$node->getLine()->getId()] = $node;
+                }
+            });
+        }
+
+        return array(
+            'traceName' => $_GET['trace'],
+            'term'  => $term,
+            'nodes' => $nodes,
+        );
     }
 
     public function call_treeGET()

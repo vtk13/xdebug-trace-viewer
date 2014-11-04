@@ -64,11 +64,20 @@ define(['jquery', 'utils'], function($, utils) {
         });
     };
 
+    api.TraceAllCall = function(request)
+    {
+        location.href = '/trace/calls' +
+            '?trace=' + encodeURIComponent(request.trace) +
+            '&file=' + encodeURIComponent(request.file) +
+            '&line=' + encodeURIComponent(request.line);
+    };
+
     api.TraceCallTree = function(request)
     {
         $.getJSON('/trace/call-tree', request, function(data) {
             var idPrefix = utils.hashCode(request.file + ':' + request.line);
-            $('<div title="Here is call hierarchy leading to selected line of code">' +
+            $('<div class="call-hierarchy" title="Here is call hierarchy leading to selected line of code">' +
+                '<div class="pull-right"><span class="a expand-all">Expand all</span> <span class="a collapse-all">Collapse all</span></div>' +
                 '<div class="pre">' + drawCallHierarchy(data, idPrefix) + '</div>' +
                 '</div>')
                 .dialog({width: '90%'})
