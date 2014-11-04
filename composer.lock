@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "92e699fe39e99a826f5dc26444dbae60",
+    "hash": "535f2d015a1bc3b4975d15485ae955ca",
     "packages": [
         {
             "name": "vtk13/lib-xdebug-trace",
-            "version": "0.4",
+            "version": "0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vtk13/lib-xdebug-trace.git",
-                "reference": "abf996abb2bbc68f04ce15bb7287dcf2acc6b858"
+                "reference": "bb9e62a0ef3825f554c795b7ced578657d50e5a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vtk13/lib-xdebug-trace/zipball/abf996abb2bbc68f04ce15bb7287dcf2acc6b858",
-                "reference": "abf996abb2bbc68f04ce15bb7287dcf2acc6b858",
+                "url": "https://api.github.com/repos/vtk13/lib-xdebug-trace/zipball/bb9e62a0ef3825f554c795b7ced578657d50e5a7",
+                "reference": "bb9e62a0ef3825f554c795b7ced578657d50e5a7",
                 "shasum": ""
             },
             "require-dev": {
@@ -30,10 +30,10 @@
                 }
             },
             "support": {
-                "source": "https://github.com/vtk13/lib-xdebug-trace/tree/0.4",
+                "source": "https://github.com/vtk13/lib-xdebug-trace/tree/0.5",
                 "issues": "https://github.com/vtk13/lib-xdebug-trace/issues"
             },
-            "time": "2014-11-03 10:50:56"
+            "time": "2014-11-04 09:59:02"
         },
         {
             "name": "vtk13/mvc",

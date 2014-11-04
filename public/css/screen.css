@@ -17,15 +17,17 @@
     margin-left: 15px;
 }
 .covered {
-    background: #0f0;
+    background: #f5f5f5;
 }
 .highlight {
-    background: #f80;
+    background: #fb8;
 }
 
 .line {
     position: relative;
     overflow: visible;
+    white-space: pre;
+    font-family: 'Courier New' monospace;
 }
 .line .line-menu {
     white-space: normal;
@@ -42,6 +44,14 @@
 }
 .open {
     display: block;
+}
+
+.list-group-item.active a {
+    color: white;
+}
+
+.sub-list .active {
+    font-weight: bold;
 }
 
 .a {

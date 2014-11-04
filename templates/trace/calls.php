@@ -6,16 +6,23 @@
     <div class="col-md-8">
         <div class="list-group">
         <?php
+        use Vtk13\LibXdebugTrace\Trace\Line;
         use Vtk13\LibXdebugTrace\Trace\Node;
+        use Vtk13\TraceView\Formatters\TraceHtml;
+
         /* @var $nodes Node[] */
         /* @var $traceName string */
+        /* @var $traceFile string */
+        /* @var $traceLine string */
+
+        echo '<div class="list-group-item active">All calls of ' .
+            TraceHtml::line($traceName, new Line($traceFile, $traceLine)) . '</div>';
         foreach ($nodes as $node) {
-            $basename = basename($node->file);
-            echo <<<HTML
-            <a class="list-group-item" title="{$node->file}" href="/trace/call?trace={$traceName}&id={$node->callId}">
-                #{$node->callId} {$node->timeStart}s {$basename}:{$node->line} {$node->function}()
-            </a>
-HTML;
+            ?>
+            <div class="list-group-item">
+                <?php echo TraceHtml::nodeLine($traceName, $node, false); ?>
+            </div>
+            <?php
         }
         ?>
         </div>

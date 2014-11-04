@@ -9,6 +9,8 @@ use Vtk13\Mvc\Exception\RouteNotFoundException;
 use Vtk13\Mvc\Handlers\AbstractController;
 use Vtk13\Mvc\Http\JsonResponse;
 
+define('SEARCH_RESULTS_LIMIT', isset($_GET['limit']) ? $_GET['limit'] : 200);
+
 class TraceController extends AbstractController
 {
     public function __construct()
@@ -48,6 +50,8 @@ class TraceController extends AbstractController
 
         return array(
             'traceName' => $_GET['trace'],
+            'traceFile' => $file,
+            'traceLine' => $line,
             'nodes'     => $nodes,
         );
     }
@@ -76,33 +80,68 @@ class TraceController extends AbstractController
         );
     }
 
-    public function searchGET()
+    public function search_functionGET()
     {
         $fm = new FilesManager();
         if (empty($_GET['trace']) || empty($file = $fm->getTraceFile($_GET['trace']))) {
             throw new RouteNotFoundException("Trace {$_GET['trace']} not found in {$fm->directory}");
         }
 
-        $term = isset($_GET['term']) ? $_GET['term'] : null;
-        $mod = isset($_GET['mod']) ? $_GET['mod'] : null;
+        $term = isset($_GET['function_term']) ? $_GET['function_term'] : null;
+        $mod  = isset($_GET['function_mod']) ? $_GET['function_mod'] : null;
 
         $nodes = array();
 
         if ($term) {
-            $term = preg_quote($term, '~');
             $parser = new Parser();
             $trace = $parser->parse($fm->getTraceFile($_GET['trace']));
             $trace->traverse(function(Node $node) use ($term, $mod, &$nodes) {
-                if (count($nodes) < 200 && preg_match("~{$term}~{$mod}", $node->function)) {
-                    $nodes[$node->getLine()->getId()] = $node;
+                if (count($nodes) < SEARCH_RESULTS_LIMIT) {
+                    if (preg_match("~{$term}~{$mod}", $node->function)) {
+                        $nodes[$node->getLine()->getId()] = $node;
+                    }
                 }
             });
         }
 
         return array(
-            'traceName' => $_GET['trace'],
-            'term'  => $term,
-            'nodes' => $nodes,
+            'traceName'     => $_GET['trace'],
+            'term'          => $term,
+            'nodes'         => $nodes,
+        );
+    }
+
+    public function search_parameterGET()
+    {
+        $fm = new FilesManager();
+        if (empty($_GET['trace']) || empty($file = $fm->getTraceFile($_GET['trace']))) {
+            throw new RouteNotFoundException("Trace {$_GET['trace']} not found in {$fm->directory}");
+        }
+
+        $term = isset($_GET['parameter_term']) ? $_GET['parameter_term'] : null;
+        $mod  = isset($_GET['parameter_mod']) ? $_GET['parameter_mod'] : null;
+
+        $nodes = array();
+
+        if ($term) {
+            $parser = new Parser();
+            $trace = $parser->parse($fm->getTraceFile($_GET['trace']));
+            $trace->traverse(function(Node $node) use ($term, $mod, &$nodes) {
+                if (count($nodes) < SEARCH_RESULTS_LIMIT) {
+                    foreach ($node->parameters as $param) {
+                        if (preg_match("~{$term}~{$mod}", $param)) {
+                            $nodes[$node->getId()] = $node;
+                            break;
+                        }
+                    }
+                }
+            });
+        }
+
+        return array(
+            'traceName'     => $_GET['trace'],
+            'term'          => $term,
+            'nodes'         => $nodes,
         );
     }
 

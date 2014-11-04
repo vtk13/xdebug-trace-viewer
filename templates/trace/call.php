@@ -1,6 +1,7 @@
 <?php
 use Vtk13\LibXdebugTrace\Trace\Node;
 use Vtk13\LibXdebugTrace\Trace\StackTrace;
+use Vtk13\TraceView\Formatters\TraceHtml;
 
 /* @var $node Node */
 /* @var $traceName string */
@@ -16,12 +17,11 @@ use Vtk13\LibXdebugTrace\Trace\StackTrace;
         <?php
         $stack = new StackTrace($node);
         while ($node->parent) {
-            $basename = basename($node->file);
-            echo <<<HTML
-        <a class="list-group-item" title="{$node->file}" href="/trace/view?trace={$traceName}&file={$node->file}#line{$node->line}">
-            #{$node->callId} {$node->timeStart}s {$basename}:{$node->line} {$node->function}()
-        </a>
-HTML;
+            ?>
+            <div class="list-group-item">
+                <?php echo TraceHtml::nodeLine($traceName, $node); ?>
+            </div>
+            <?php
             $node = $node->parent;
         }
         ?>
