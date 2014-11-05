@@ -66,17 +66,22 @@ class TraceController extends AbstractController
         $id = isset($_GET['id']) ? $_GET['id'] : null;
 
         $found = null;
+        $underlyingNodes = array();
         $parser = new Parser();
         $trace = $parser->parse($fm->getTraceFile($_GET['trace']));
-        $trace->traverse(function(Node $node) use ($id, &$found) {
+        $trace->traverse(function(Node $node) use ($id, &$found, &$underlyingNodes) {
             if ($node->callId == $id) {
                 $found = $node;
+            }
+            if ($node->parent && $node->parent->callId == $id) {
+                $underlyingNodes[] = $node;
             }
         });
 
         return array(
-            'traceName' => $_GET['trace'],
-            'node'      => $found,
+            'traceName'         => $_GET['trace'],
+            'node'              => $found,
+            'underlyingNodes'   => $underlyingNodes,
         );
     }
 

@@ -16,6 +16,7 @@
         }
     },
     "require": {
+        "php": ">=5.5",
         "vtk13/mvc": "0.*",
         "vtk13/lib-xdebug-trace": "0.*"
     },

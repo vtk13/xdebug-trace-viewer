@@ -1,23 +1,22 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
-        "This file is @generated automatically"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "535f2d015a1bc3b4975d15485ae955ca",
+    "hash": "c005e544966d0fc9f857a5c07fd5fb9e",
     "packages": [
         {
             "name": "vtk13/lib-xdebug-trace",
-            "version": "0.5",
+            "version": "0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vtk13/lib-xdebug-trace.git",
-                "reference": "bb9e62a0ef3825f554c795b7ced578657d50e5a7"
+                "reference": "ed203a9f37f30a3722abc2cc79cfbe45ccddd7b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vtk13/lib-xdebug-trace/zipball/bb9e62a0ef3825f554c795b7ced578657d50e5a7",
-                "reference": "bb9e62a0ef3825f554c795b7ced578657d50e5a7",
+                "url": "https://api.github.com/repos/vtk13/lib-xdebug-trace/zipball/ed203a9f37f30a3722abc2cc79cfbe45ccddd7b3",
+                "reference": "ed203a9f37f30a3722abc2cc79cfbe45ccddd7b3",
                 "shasum": ""
             },
             "require-dev": {
@@ -30,10 +29,10 @@
                 }
             },
             "support": {
-                "source": "https://github.com/vtk13/lib-xdebug-trace/tree/0.5",
+                "source": "https://github.com/vtk13/lib-xdebug-trace/tree/0.6",
                 "issues": "https://github.com/vtk13/lib-xdebug-trace/issues"
             },
-            "time": "2014-11-04 09:59:02"
+            "time": "2014-11-05 09:59:56"
         },
         {
             "name": "vtk13/mvc",
@@ -483,7 +482,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
-    "prefer-stable": false,
-    "platform": [],
+    "platform": {
+        "php": ">=5.5"
+    },
     "platform-dev": []
 }
