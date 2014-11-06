@@ -50,6 +50,10 @@
     color: white;
 }
 
+.list-group-item.bg-success {
+    background-color: #dff0d8;
+}
+
 .sub-list .active {
     font-weight: bold;
 }
