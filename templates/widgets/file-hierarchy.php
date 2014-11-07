@@ -12,22 +12,23 @@
             return substr(md5($trace->getFullName()), 0, 6) . '-' . substr(md5($file->getFullName()), 0, 6);
         }
 
-        function drawFileHierarchy(File $node, $traceFileName, $currentFileName, $level = 1)
+        function drawFileHierarchy(File $file, $traceFileName, $currentFileName, $level = 1)
         {
-            if ($level == 1 && $node instanceof Directory) {
-                foreach ($node->subItems as $child) {
+            if ($level == 1 && $file instanceof Directory) {
+                foreach ($file->subItems as $child) {
                     drawFileHierarchy($child, $traceFileName, $currentFileName, $level + 1);
                 }
-            } elseif ($node instanceof Directory) {
+            } elseif ($file instanceof Directory) {
                 ?>
                 <div>
                     <div>
-                        <span id="<?php echo fileId(new File($traceFileName), $node); ?>" class="toggler store glyphicon glyphicon-plus"></span>
-                        <?php echo $node->getBaseName(); ?>
+                        <span id="<?php echo fileId(new File($traceFileName), $file); ?>" class="toggler store glyphicon glyphicon-plus"></span>
+                        <?php echo $file->getBaseName(); ?>
+                        <span class="label label-info"><?php echo $file->hits; ?></span>
                     </div>
                     <div class="sub-list" style="padding-left: 15px">
                         <?php
-                        foreach ($node->subItems as $child) {
+                        foreach ($file->subItems as $child) {
                             drawFileHierarchy($child, $traceFileName, $currentFileName, $level + 1);
                         }
                         ?>
@@ -37,11 +38,11 @@
             } else {
                 ?>
                 <div>
-                    <a id="<?php echo fileId(new File($traceFileName), $node); ?>"
-                       href="<?php echo '/trace/view?trace=' . urlencode($traceFileName) . '&file=' . urlencode($node->getFullName()) ?>"
-                       class="<?php echo $currentFileName == $node->getFullName() ? 'active' : ''; ?>">
-                        <?php echo $node->getBaseName(); ?>
-                    </a>
+                    <a id="<?php echo fileId(new File($traceFileName), $file); ?>"
+                       href="<?php echo '/trace/view?trace=' . urlencode($traceFileName) . '&file=' . urlencode($file->getFullName()) ?>"
+                       class="<?php echo $currentFileName == $file->getFullName() ? 'active' : ''; ?>">
+                        <?php echo $file->getBaseName(); ?></a>
+                    <span class="label label-info"><?php echo $file->hits; ?></span>
                 </div>
             <?php
             }

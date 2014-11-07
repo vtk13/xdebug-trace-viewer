@@ -24,6 +24,21 @@ HTML;
     public static function nodeLine($traceName, Node $node, $withFileName = true, $withParameters = true)
     {
         if ($withParameters) {
+            if (isset($node->returnValue)) {
+                if (strlen($node->returnValue) > 8) {
+                    $event = '<div title="Return value">' . $node->returnValue . '</div>';
+                    $event = '$(' . json_encode($event) . ').dialog({width: "80%"});';
+                    $event = htmlspecialchars($event);
+                    $return = <<<HTML
+<span class="a" onclick="{$event}">return</span>
+HTML;
+                } else {
+                    $return = $node->returnValue;
+                }
+            } else {
+                $return = 'null';
+            }
+
             $args = array();
             foreach ($node->parameters as $parameter) {
                 if (preg_match('~class (.*?) {~', $parameter, $matches)
@@ -45,6 +60,7 @@ HTML;
 HTML;
         } else {
             $arguments = '';
+            $return = '';
             $nodeId = '';
         }
 
@@ -54,7 +70,7 @@ HTML;
             $fileName = '';
         }
         return <<<HTML
-{$nodeId} {$fileName} {$node->function}({$arguments})
+{$nodeId} {$fileName} {$node->function}({$arguments}) -> {$return}
 HTML;
     }
 }
