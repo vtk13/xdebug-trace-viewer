@@ -18,22 +18,24 @@ HTML;
      * @param $traceName
      * @param Node $node
      * @param bool $withFileName
-     * @param bool $withParameters false - assumed node is just line of code, not a particular call
+     * @param bool $detailed false - assumed node is just line of code, not a particular call
      * @return string
      */
-    public static function nodeLine($traceName, Node $node, $withFileName = true, $withParameters = true)
+    public static function nodeLine($traceName, Node $node, $withFileName = true, $detailed = true)
     {
-        if ($withParameters) {
+        if ($detailed) {
+            $ts = round(($node->timeEnd - $node->timeStart) * 100000) . 'us';
+
             if (isset($node->returnValue)) {
                 if (strlen($node->returnValue) > 8) {
                     $event = '<div title="Return value">' . $node->returnValue . '</div>';
                     $event = '$(' . json_encode($event) . ').dialog({width: "80%"});';
                     $event = htmlspecialchars($event);
                     $return = <<<HTML
-<span class="a" onclick="{$event}">return</span>
+-> <span class="a" onclick="{$event}">return</span>
 HTML;
                 } else {
-                    $return = $node->returnValue;
+                    $return = '-> ' . $node->returnValue;
                 }
             } else {
                 $return = 'null';
@@ -59,6 +61,7 @@ HTML;
 <a title="View stack trace" href="/trace/call?trace={$traceName}&id={$node->callId}">#{$node->callId}</a>
 HTML;
         } else {
+            $ts = '';
             $arguments = '';
             $return = '';
             $nodeId = '';
@@ -70,7 +73,7 @@ HTML;
             $fileName = '';
         }
         return <<<HTML
-{$nodeId} {$fileName} {$node->function}({$arguments}) -> {$return}
+{$nodeId} {$ts} {$fileName} {$node->function}({$arguments}) {$return}
 HTML;
     }
 }
