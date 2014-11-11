@@ -25,6 +25,7 @@ HTML;
     {
         if ($detailed) {
             $ts = round(($node->timeEnd - $node->timeStart) * 100000) . 'us';
+            $calls = '';
 
             if (isset($node->returnValue)) {
                 if (strlen($node->returnValue) > 8) {
@@ -62,6 +63,13 @@ HTML;
 HTML;
         } else {
             $ts = '';
+
+            $params = [
+                'trace' => $traceName,
+                'file'  => $node->file,
+                'line'  => $node->line,
+            ];
+            $calls = '<a href="/trace/calls?' . http_build_query($params) . '">View all ' . (isset($node->hits) ? $node->hits : '') .' calls</a>';
             $arguments = '';
             $return = '';
             $nodeId = '';
@@ -73,7 +81,7 @@ HTML;
             $fileName = '';
         }
         return <<<HTML
-{$nodeId} {$ts} {$fileName} {$node->function}({$arguments}) {$return}
+{$nodeId} {$ts} {$fileName} {$node->function}({$arguments}) {$return} {$calls}
 HTML;
     }
 }

@@ -103,7 +103,13 @@ class TraceController extends AbstractController
             $trace->traverse(function(Node $node) use ($term, $mod, &$nodes) {
                 if (count($nodes) < SEARCH_RESULTS_LIMIT) {
                     if (preg_match("~{$term}~{$mod}", $node->function)) {
-                        $nodes[$node->getLine()->getId()] = $node;
+                        $id = $node->getLine()->getId();
+                        if (isset($nodes[$id])) {
+                            $nodes[$id]->hits++;
+                        } else {
+                            $nodes[$id] = $node;
+                            $nodes[$id]->hits = 1;
+                        }
                     }
                 }
             });
