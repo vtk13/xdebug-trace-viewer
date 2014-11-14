@@ -7,16 +7,16 @@
     "packages": [
         {
             "name": "vtk13/lib-xdebug-trace",
-            "version": "0.7",
+            "version": "0.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vtk13/lib-xdebug-trace.git",
-                "reference": "3310678eafb4072b5ef77534c19a25cde1331665"
+                "reference": "f3f4c009789ddff9c1accd6c5d04d950dd2e7999"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vtk13/lib-xdebug-trace/zipball/3310678eafb4072b5ef77534c19a25cde1331665",
-                "reference": "3310678eafb4072b5ef77534c19a25cde1331665",
+                "url": "https://api.github.com/repos/vtk13/lib-xdebug-trace/zipball/f3f4c009789ddff9c1accd6c5d04d950dd2e7999",
+                "reference": "f3f4c009789ddff9c1accd6c5d04d950dd2e7999",
                 "shasum": ""
             },
             "require-dev": {
@@ -29,10 +29,10 @@
                 }
             },
             "support": {
-                "source": "https://github.com/vtk13/lib-xdebug-trace/tree/0.7",
+                "source": "https://github.com/vtk13/lib-xdebug-trace/tree/0.7.1",
                 "issues": "https://github.com/vtk13/lib-xdebug-trace/issues"
             },
-            "time": "2014-11-07 05:12:24"
+            "time": "2014-11-14 02:43:06"
         },
         {
             "name": "vtk13/mvc",

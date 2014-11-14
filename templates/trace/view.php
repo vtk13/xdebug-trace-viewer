@@ -9,7 +9,7 @@
         use Vtk13\LibXdebugTrace\Parser\Parser;
         use Vtk13\LibXdebugTrace\Trace\Line;
 
-        function lineMenu($trace, $file, $line)
+        function lineMenu($trace, $file, $line, $hits)
         {
             $trace = htmlspecialchars($trace);
             $file = htmlspecialchars($file);
@@ -19,7 +19,7 @@
     <span class="pull-right glyphicon glyphicon-remove a line-menu-close"></span>
     <div><span class="a view-level-up">One level up</span></div>
     <div><span class="a view-level-down">One level down</span></div>
-    <div><span class="a view-all-calls">View all calls</span></div>
+    <div><span class="a view-all-calls">View all {$hits} calls</span></div>
     <div><span class="a view-call-tree">Full call tree leading to this line</span></div>
 </div>
 HTML;
@@ -41,10 +41,12 @@ HTML;
                 if ($covered) {
                     $lineNumStr = '<span class="a line-menu-show">' . $lineNumStr . '</span>';
                     $class = 'covered';
+                    $hits = $fileCoverage[$lineNum]->hits;
                 } else {
                     $class = '';
+                    $hits = 0;
                 }
-                $lineMenu = lineMenu($traceFileName, $first->file, $lineNum);
+                $lineMenu = lineMenu($traceFileName, $first->file, $lineNum, $hits);
                 echo "<div id=\"line{$lineNum}\" class=\"line {$class}\">{$lineMenu}[{$lineNumStr}] " . htmlspecialchars($line) . '</div>';
             }
         }

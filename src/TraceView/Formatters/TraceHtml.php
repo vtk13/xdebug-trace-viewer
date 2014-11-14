@@ -28,18 +28,18 @@ HTML;
             $calls = '';
 
             if (isset($node->returnValue)) {
-                if (strlen($node->returnValue) > 8) {
-                    $event = '<div title="Return value">' . $node->returnValue . '</div>';
+                if (strlen($node->returnValue) > 30) {
+                    $event = '<div title="Return value">' . htmlspecialchars($node->returnValue) . '</div>';
                     $event = '$(' . json_encode($event) . ').dialog({width: "80%"});';
                     $event = htmlspecialchars($event);
                     $return = <<<HTML
 -> <span class="a" onclick="{$event}">return</span>
 HTML;
                 } else {
-                    $return = '-> ' . $node->returnValue;
+                    $return = '-> ' . htmlspecialchars($node->returnValue);
                 }
             } else {
-                $return = 'null';
+                $return = '';
             }
 
             $args = array();
@@ -47,14 +47,14 @@ HTML;
                 if (preg_match('~class (.*?) {~', $parameter, $matches)
                     || preg_match('~(array) \(~', $parameter, $matches)
                 ) {
-                    $event = '<div title="Parameter value">' . $parameter . '</div>';
+                    $event = '<div title="Parameter value">' . htmlspecialchars($parameter) . '</div>';
                     $event = '$(' . json_encode($event) . ').dialog({width: "80%"});';
                     $event = htmlspecialchars($event);
                     $args[] = <<<HTML
-    <span class="a" title="Parameter value" onclick="{$event}">{$matches[1]}</span>
+<span class="a" title="Parameter value" onclick="{$event}">{$matches[1]}</span>
 HTML;
                 } else {
-                    $args[] = $parameter;
+                    $args[] = htmlspecialchars($parameter);
                 }
             }
             $arguments = implode(', ', $args);

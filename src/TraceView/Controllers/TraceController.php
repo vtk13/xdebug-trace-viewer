@@ -95,6 +95,7 @@ class TraceController extends AbstractController
         $term = isset($_GET['function_term']) ? $_GET['function_term'] : null;
         $mod  = isset($_GET['function_mod']) ? $_GET['function_mod'] : null;
 
+        /* @var $nodes Node[] */
         $nodes = array();
 
         if ($term) {
@@ -108,6 +109,7 @@ class TraceController extends AbstractController
                             $nodes[$id]->hits++;
                         } else {
                             $nodes[$id] = $node;
+                            // TODO use SplObjectStorage?
                             $nodes[$id]->hits = 1;
                         }
                     }
