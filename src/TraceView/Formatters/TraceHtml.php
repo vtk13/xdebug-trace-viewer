@@ -24,7 +24,7 @@ HTML;
     public static function nodeLine($traceName, Node $node, $withFileName = true, $detailed = true)
     {
         if ($detailed) {
-            $ts = round(($node->timeEnd - $node->timeStart) * 100000) . 'us';
+            $ts = '<span class="label label-info pull-right">' . number_format(($node->timeEnd - $node->timeStart) * 100000) . ' us</span>';
             $calls = '';
 
             if (isset($node->returnValue)) {
@@ -44,8 +44,8 @@ HTML;
 
             $args = array();
             foreach ($node->parameters as $parameter) {
-                if (preg_match('~class (.*?) {~', $parameter, $matches)
-                    || preg_match('~(array) \(~', $parameter, $matches)
+                if (preg_match('~^class (.*?) {~', $parameter, $matches)
+                    || preg_match('~^(array) \(~', $parameter, $matches)
                 ) {
                     $event = '<div title="Parameter value">' . htmlspecialchars($parameter) . '</div>';
                     $event = '$(' . json_encode($event) . ').dialog({width: "80%"});';
