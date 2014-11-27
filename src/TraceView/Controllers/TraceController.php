@@ -141,10 +141,14 @@ class TraceController extends AbstractController
             $trace = $parser->parse($fm->getTraceFile($_GET['trace']));
             $trace->traverse(function(Node $node) use ($term, $mod, &$nodes) {
                 if (count($nodes) < SEARCH_RESULTS_LIMIT) {
-                    foreach ($node->parameters as $param) {
-                        if (preg_match("~{$term}~{$mod}", $param)) {
-                            $nodes[$node->getId()] = $node;
-                            break;
+                    if ($node->returnValue && preg_match("~{$term}~{$mod}", $node->returnValue)) {
+                        $nodes[$node->getId()] = $node;
+                    } else {
+                        foreach ($node->parameters as $param) {
+                            if (preg_match("~{$term}~{$mod}", $param)) {
+                                $nodes[$node->getId()] = $node;
+                                break;
+                            }
                         }
                     }
                 }

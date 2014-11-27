@@ -13,7 +13,7 @@
 </div>
 
 <div class="panel panel-default">
-    <div class="panel-heading">Search for parameter value</div>
+    <div class="panel-heading">Search for parameter/return value</div>
     <div class="panel-body">
         <form action="/trace/search_parameter" method="GET">
             <div>
