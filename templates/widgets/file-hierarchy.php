@@ -1,12 +1,14 @@
-<div class="panel panel-default">
+<?php
+use Vtk13\LibXdebugTrace\FileUtil\Directory;
+use Vtk13\LibXdebugTrace\FileUtil\File;
+use Vtk13\LibXdebugTrace\FileUtil\TraceOutputDir;
+
+/* @var $trace string */
+/* @var $file string */
+?><div class="panel panel-default">
     <div class="panel-heading">Hierarchy of used files</div>
     <div class="panel-body">
         <?php
-        use Vtk13\LibXdebugTrace\FileUtil\Directory;
-        use Vtk13\LibXdebugTrace\FileUtil\File;
-        use Vtk13\LibXdebugTrace\FileUtil\FilesManager;
-        use Vtk13\LibXdebugTrace\Parser\Parser;
-
         function fileId(File $trace, File $file)
         {
             return substr(md5($trace->getFullName()), 0, 6) . '-' . substr(md5($file->getFullName()), 0, 6);
@@ -39,7 +41,7 @@
                 ?>
                 <div>
                     <a id="<?php echo fileId(new File($traceFileName), $file); ?>"
-                       href="<?php echo '/trace/view?trace=' . urlencode($traceFileName) . '&file=' . urlencode($file->getFullName()) ?>"
+                       href="<?php echo '/file-trace/view/' . urlencode($traceFileName) . '/' . urlencode($file->getFullName()) ?>"
                        class="<?php echo $currentFileName == $file->getFullName() ? 'active' : ''; ?>">
                         <?php echo $file->getBaseName(); ?></a>
                     <span class="label label-info"><?php echo $file->hits; ?></span>
@@ -48,14 +50,10 @@
             }
         }
 
-        if (isset($_GET['trace'])) {
+        if (isset($trace)) {
             try {
-                $fm = new FilesManager();
-                $file = $fm->getTraceFile($_GET['trace']);
-                $parser = new Parser();
-                $trace = $parser->parse($file);
-
-                drawFileHierarchy($trace->fileHierarchy(), $_GET['trace'], isset($_GET['file']) ? $_GET['file'] : null);
+                $fm = new TraceOutputDir();
+                drawFileHierarchy($fm->getTrace($trace)->fileHierarchy(), $trace, isset($file) ? $file : null);
             } catch (Exception $ex) {
                 ?><div class="panel panel-danger"><div class="panel-heading">
                     <?php echo $ex->getMessage(); ?>

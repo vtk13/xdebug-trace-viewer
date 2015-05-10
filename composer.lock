@@ -1,13 +1,43 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
-    "hash": "c005e544966d0fc9f857a5c07fd5fb9e",
+    "hash": "37cba99d0be98fd2d7ce63af33ab247c",
     "packages": [
         {
+            "name": "vtk13/lib-sql",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vtk13/lib-sql.git",
+                "reference": "4e56f585bfe99827269450607f447d7aa341b053"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vtk13/lib-sql/zipball/4e56f585bfe99827269450607f447d7aa341b053",
+                "reference": "4e56f585bfe99827269450607f447d7aa341b053",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Vtk13\\LibSql\\": "src/"
+                }
+            },
+            "support": {
+                "source": "https://github.com/vtk13/lib-sql/tree/master",
+                "issues": "https://github.com/vtk13/lib-sql/issues"
+            },
+            "time": "2014-11-30 11:21:08"
+        },
+        {
             "name": "vtk13/lib-xdebug-trace",
-            "version": "0.7.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vtk13/lib-xdebug-trace.git",
@@ -36,16 +66,16 @@
         },
         {
             "name": "vtk13/mvc",
-            "version": "0.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vtk13/mvc.git",
-                "reference": "d08ac534c11c63507b29736eb939a09d05af38b5"
+                "reference": "52be8cbc72eca0bdcc2af5baccd18c6949a2ba83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vtk13/mvc/zipball/d08ac534c11c63507b29736eb939a09d05af38b5",
-                "reference": "d08ac534c11c63507b29736eb939a09d05af38b5",
+                "url": "https://api.github.com/repos/vtk13/mvc/zipball/52be8cbc72eca0bdcc2af5baccd18c6949a2ba83",
+                "reference": "52be8cbc72eca0bdcc2af5baccd18c6949a2ba83",
                 "shasum": ""
             },
             "require-dev": {
@@ -61,7 +91,7 @@
                 "source": "https://github.com/vtk13/mvc/tree/master",
                 "issues": "https://github.com/vtk13/mvc/issues"
             },
-            "time": "2014-11-01 05:05:57"
+            "time": "2014-11-30 11:41:14"
         }
     ],
     "packages-dev": [
@@ -433,17 +463,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.5.6",
+            "version": "v2.6.0",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "2d9f527449cabfa8543dd7fa3a466d6ae83d6726"
+                "reference": "51c845cf3e4bfc182d1d5c05ed1c7338361d86f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/2d9f527449cabfa8543dd7fa3a466d6ae83d6726",
-                "reference": "2d9f527449cabfa8543dd7fa3a466d6ae83d6726",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/51c845cf3e4bfc182d1d5c05ed1c7338361d86f8",
+                "reference": "51c845cf3e4bfc182d1d5c05ed1c7338361d86f8",
                 "shasum": ""
             },
             "require": {
@@ -452,7 +482,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -476,12 +506,17 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-10-01 05:50:18"
+            "time": "2014-11-20 13:24:23"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "vtk13/mvc": 20,
+        "vtk13/lib-sql": 20,
+        "vtk13/lib-xdebug-trace": 20
+    },
+    "prefer-stable": false,
     "platform": {
         "php": ">=5.5"
     },

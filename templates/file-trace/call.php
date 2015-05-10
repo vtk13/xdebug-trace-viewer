@@ -4,7 +4,7 @@ use Vtk13\LibXdebugTrace\Trace\StackTrace;
 use Vtk13\TraceView\Formatters\TraceHtml;
 
 /* @var $node Node */
-/* @var $traceName string */
+/* @var $trace string */
 /* @var $underlyingNodes Node[] */
 
 ?><div class="row">
@@ -22,7 +22,7 @@ use Vtk13\TraceView\Formatters\TraceHtml;
                 $class = ($each == $node ? 'bg-success' : '');
                 ?>
                 <div class="list-group-item <?php echo $class; ?>" style="margin-left: <?php echo $margin; ?>px;">
-                    <?php echo TraceHtml::nodeLine($traceName, $each); ?>
+                    <?php echo TraceHtml::nodeLine($trace, $each); ?>
                 </div>
                 <?php
                 $margin += 5;
@@ -31,7 +31,7 @@ use Vtk13\TraceView\Formatters\TraceHtml;
             foreach ($underlyingNodes as $each) {
                 ?>
                 <div class="list-group-item" style="margin-left: <?php echo $margin; ?>px;">
-                    <?php echo TraceHtml::nodeLine($traceName, $each); ?>
+                    <?php echo TraceHtml::nodeLine($trace, $each); ?>
                 </div>
                 <?php
             }

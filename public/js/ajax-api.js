@@ -9,8 +9,8 @@ define(['jquery', 'utils'], function($, utils) {
         for (var i in node) {
             list += '<div>';
             var id = idPrefix + utils.hashCode(node[i].file + ':' + node[i].line);
-            var href = '/trace/view/?trace=' + encodeURIComponent(utils.queryParam.trace) +
-                '&file=' + encodeURIComponent(node[i].file) +
+            var href = '/file-trace/view/' + encodeURIComponent(utils.queryParam.trace) +
+                '/' + encodeURIComponent(node[i].file) +
                 '#line' + encodeURIComponent(node[i].line);
             var children = utils.count(node[i].children);
             list +=
@@ -30,7 +30,7 @@ define(['jquery', 'utils'], function($, utils) {
 
     api.TraceLevelUp = function(request)
     {
-        $.getJSON('/trace/level-up', request, function(data) {
+        $.getJSON('/file-trace/level-up', request, function(data) {
             var idPrefix = utils.hashCode(request.file + ':' + request.line);
             $('<div title="One level up">' +
                 '<div class="pre">' + drawCallHierarchy(data, idPrefix) + '</div>' +
@@ -48,7 +48,7 @@ define(['jquery', 'utils'], function($, utils) {
 
     api.TraceLevelDown = function(request)
     {
-        $.getJSON('/trace/level-down', request, function(data) {
+        $.getJSON('/file-trace/level-down', request, function(data) {
             var idPrefix = utils.hashCode(request.file + ':' + request.line);
             $('<div title="One level down">' +
                 '<div class="pre">' + drawCallHierarchy(data, idPrefix) + '</div>' +
@@ -66,7 +66,7 @@ define(['jquery', 'utils'], function($, utils) {
 
     api.TraceAllCall = function(request)
     {
-        location.href = '/trace/calls' +
+        location.href = '/file-trace/calls' +
             '?trace=' + encodeURIComponent(request.trace) +
             '&file=' + encodeURIComponent(request.file) +
             '&line=' + encodeURIComponent(request.line);
@@ -74,7 +74,7 @@ define(['jquery', 'utils'], function($, utils) {
 
     api.TraceCallTree = function(request)
     {
-        $.getJSON('/trace/call-tree', request, function(data) {
+        $.getJSON('/file-trace/call-tree', request, function(data) {
             var idPrefix = utils.hashCode(request.file + ':' + request.line);
             $('<div class="call-hierarchy" title="Here is call hierarchy leading to selected line of code">' +
                 '<div class="pull-right"><span class="a expand-all">Expand all</span> <span class="a collapse-all">Collapse all</span></div>' +

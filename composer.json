@@ -7,18 +7,25 @@
         {
             "type": "vcs",
             "url": "https://github.com/vtk13/lib-xdebug-trace"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/vtk13/lib-sql"
         }
     ],
     "autoload": {
         "psr-4": {
             "Vtk13\\TraceView\\": "src/TraceView",
-            "Vtk13\\LibXdebugTrace\\": "lib/lib-xdebug-trace/src"
+            "Vtk13\\LibXdebugTrace\\": "lib/lib-xdebug-trace/src",
+            "Vtk13\\LibSql\\": "lib/lib-sql/src",
+            "Vtk13\\Mvc\\": "lib/mvc/src"
         }
     },
     "require": {
         "php": ">=5.5",
-        "vtk13/mvc": "0.*",
-        "vtk13/lib-xdebug-trace": "0.*"
+        "vtk13/mvc": "dev-master",
+        "vtk13/lib-sql": "dev-master",
+        "vtk13/lib-xdebug-trace": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"

@@ -1,21 +1,29 @@
 <?php
 namespace Vtk13\TraceView\Controllers;
 
-use Vtk13\LibXdebugTrace\FileUtil\FilesManager;
-use Vtk13\LibXdebugTrace\Parser\Parser;
+use Exception;
+use Vtk13\LibXdebugTrace\FileUtil\TraceOutputDir;
+use Vtk13\LibXdebugTrace\Trace\ITraceList;
 use Vtk13\LibXdebugTrace\Trace\Line;
 use Vtk13\LibXdebugTrace\Trace\Node;
-use Vtk13\Mvc\Exception\RouteNotFoundException;
 use Vtk13\Mvc\Handlers\AbstractController;
 use Vtk13\Mvc\Http\JsonResponse;
+use Vtk13\Mvc\Http\RedirectResponse;
+use Vtk13\TraceView\Registry;
 
 define('SEARCH_RESULTS_LIMIT', isset($_GET['limit']) ? $_GET['limit'] : 200);
 
-class TraceController extends AbstractController
+class FileTraceController extends AbstractController
 {
+    /**
+     * @var ITraceList
+     */
+    protected $tl;
+
     public function __construct()
     {
-        parent::__construct('trace');
+        parent::__construct('file-trace');
+        $this->tl = new TraceOutputDir();
     }
 
     public function indexGET()
@@ -23,25 +31,22 @@ class TraceController extends AbstractController
 
     }
 
-    public function viewGET()
+    public function viewGET($trace, $file = null)
     {
-
+        return [
+            'trace' => $trace,
+            'file'  => $file,
+        ];
     }
 
     public function callsGET()
     {
-        $fm = new FilesManager();
-        if (empty($_GET['trace']) || empty($file = $fm->getTraceFile($_GET['trace']))) {
-            throw new RouteNotFoundException("Trace {$_GET['trace']} not found in {$fm->directory}");
-        }
-
         $file = isset($_GET['file']) ? $_GET['file'] : null;
         $line = isset($_GET['line']) ? $_GET['line'] : null;
 
         $nodes = array();
 
-        $parser = new Parser();
-        $trace = $parser->parse($fm->getTraceFile($_GET['trace']));
+        $trace = $this->tl->getTrace($_GET['trace']);
         $trace->traverse(function(Node $node) use ($file, $line, &$nodes) {
             if ($node->file == $file && $node->line == $line) {
                 $nodes[] = $node;
@@ -49,7 +54,7 @@ class TraceController extends AbstractController
         });
 
         return array(
-            'traceName' => $_GET['trace'],
+            'trace'     => $_GET['trace'],
             'traceFile' => $file,
             'traceLine' => $line,
             'nodes'     => $nodes,
@@ -58,17 +63,11 @@ class TraceController extends AbstractController
 
     public function callGET()
     {
-        $fm = new FilesManager();
-        if (empty($_GET['trace']) || empty($file = $fm->getTraceFile($_GET['trace']))) {
-            throw new RouteNotFoundException("Trace {$_GET['trace']} not found in {$fm->directory}");
-        }
-
         $id = isset($_GET['id']) ? $_GET['id'] : null;
 
         $found = null;
         $underlyingNodes = array();
-        $parser = new Parser();
-        $trace = $parser->parse($fm->getTraceFile($_GET['trace']));
+        $trace = $this->tl->getTrace($_GET['trace']);
         $trace->traverse(function(Node $node) use ($id, &$found, &$underlyingNodes) {
             if ($node->callId == $id) {
                 $found = $node;
@@ -79,19 +78,14 @@ class TraceController extends AbstractController
         });
 
         return array(
-            'traceName'         => $_GET['trace'],
+            'trace'             => $_GET['trace'],
             'node'              => $found,
             'underlyingNodes'   => $underlyingNodes,
         );
     }
 
-    public function search_functionGET()
+    public function searchFunctionGET()
     {
-        $fm = new FilesManager();
-        if (empty($_GET['trace']) || empty($file = $fm->getTraceFile($_GET['trace']))) {
-            throw new RouteNotFoundException("Trace {$_GET['trace']} not found in {$fm->directory}");
-        }
-
         $term = isset($_GET['function_term']) ? $_GET['function_term'] : null;
         $mod  = isset($_GET['function_mod']) ? $_GET['function_mod'] : null;
 
@@ -99,8 +93,7 @@ class TraceController extends AbstractController
         $nodes = array();
 
         if ($term) {
-            $parser = new Parser();
-            $trace = $parser->parse($fm->getTraceFile($_GET['trace']));
+            $trace = $this->tl->getTrace($_GET['trace']);
             $trace->traverse(function(Node $node) use ($term, $mod, &$nodes) {
                 if (count($nodes) < SEARCH_RESULTS_LIMIT) {
                     if (preg_match("~{$term}~{$mod}", $node->function)) {
@@ -118,27 +111,21 @@ class TraceController extends AbstractController
         }
 
         return array(
-            'traceName'     => $_GET['trace'],
-            'term'          => $term,
-            'nodes'         => $nodes,
+            'trace' => $_GET['trace'],
+            'term'  => $term,
+            'nodes' => $nodes,
         );
     }
 
-    public function search_parameterGET()
+    public function searchParameterGET()
     {
-        $fm = new FilesManager();
-        if (empty($_GET['trace']) || empty($file = $fm->getTraceFile($_GET['trace']))) {
-            throw new RouteNotFoundException("Trace {$_GET['trace']} not found in {$fm->directory}");
-        }
-
         $term = isset($_GET['parameter_term']) ? $_GET['parameter_term'] : null;
         $mod  = isset($_GET['parameter_mod']) ? $_GET['parameter_mod'] : null;
 
         $nodes = array();
 
         if ($term) {
-            $parser = new Parser();
-            $trace = $parser->parse($fm->getTraceFile($_GET['trace']));
+            $trace = $this->tl->getTrace($_GET['trace']);
             $trace->traverse(function(Node $node) use ($term, $mod, &$nodes) {
                 if (count($nodes) < SEARCH_RESULTS_LIMIT) {
                     if ($node->returnValue && preg_match("~{$term}~{$mod}", $node->returnValue)) {
@@ -156,35 +143,31 @@ class TraceController extends AbstractController
         }
 
         return array(
-            'traceName'     => $_GET['trace'],
-            'term'          => $term,
-            'nodes'         => $nodes,
+            'trace' => $_GET['trace'],
+            'term'  => $term,
+            'nodes' => $nodes,
         );
     }
 
-    public function call_treeGET()
+    public function callTreeGET()
     {
         $trace  = $_GET['trace'];
         $file   = $_GET['file'];
         $line   = $_GET['line'];
 
-        $fm = new FilesManager();
-        $parser = new Parser();
-        $trace = $parser->parse($fm->getTraceFile($trace));
+        $trace = $this->tl->getTrace($trace);
         $lineInfo = $trace->callTree(new Line($file, $line));
 
         return new JsonResponse($lineInfo);
     }
 
-    public function level_upGET()
+    public function levelUpGET()
     {
         $trace  = $_GET['trace'];
         $file   = $_GET['file'];
         $line   = $_GET['line'];
 
-        $fm = new FilesManager();
-        $parser = new Parser();
-        $trace = $parser->parse($fm->getTraceFile($trace));
+        $trace = $this->tl->getTrace($trace);
 
         $nodes = array();
         $trace->traverse(function(Node $node) use (&$nodes, $file, $line) {
@@ -200,15 +183,13 @@ class TraceController extends AbstractController
         return new JsonResponse($nodes);
     }
 
-    public function level_downGET()
+    public function levelDownGET()
     {
         $trace  = $_GET['trace'];
         $file   = $_GET['file'];
         $line   = $_GET['line'];
 
-        $fm = new FilesManager();
-        $parser = new Parser();
-        $trace = $parser->parse($fm->getTraceFile($trace));
+        $trace = $this->tl->getTrace($trace);
 
         $nodes = array();
         $trace->traverse(function(Node $node) use (&$nodes, $file, $line) {
@@ -222,5 +203,71 @@ class TraceController extends AbstractController
         });
 
         return new JsonResponse($nodes);
+    }
+
+    public function importPOST($trace)
+    {
+        if (!TRACEVIEW_MYSQL) {
+            throw new Exception('Enable database support to use import');
+        }
+
+        $db = Registry::getInstance()->getDb();
+        if ($db->selectValue('SELECT id FROM traceview_traces WHERE file_name="' . $db->escape($trace) . '"')) {
+            throw new Exception("Trace {$trace} already imported");
+        }
+
+        $traceInfo = $this->tl->getTraceInfo($trace);
+        $parsedTrace = $this->tl->getTrace($trace);
+
+        $db->insert('traceview_traces', array(
+            'name'      => $trace,
+            'file_name' => $trace,
+            'm_time'    => $traceInfo->mTime,
+            'size'      => $traceInfo->size,
+        ));
+        $traceId = $db->insertId();
+
+        $parsedTrace->traverse(function(Node $node) use ($db, $traceId) {
+            foreach ($node->parameters as $k => $value) {
+                $db->insert('traceview_values', array(
+                    'trace_id'      => $traceId,
+                    'call_id'       => $node->callId,
+                    'order_id'      => $k,
+                    'type'          => $node->getType($value),
+                    'value'         => $value,
+                ));
+            }
+
+            $db->insert('traceview_values', array(
+                'trace_id'      => $traceId,
+                'call_id'       => $node->callId,
+                'order_id'      => -1,
+                'type'          => $node->getType($node->returnValue),
+                'value'         => $node->returnValue,
+            ));
+            $returnId = $db->insertId();
+
+            $db->insert('traceview_nodes', array(
+                'trace_id'      => $traceId,
+                'call_id'       => $node->callId,
+                'time_start'    => $node->timeStart,
+                'time_end'      => $node->timeEnd,
+                'function'      => $node->function,
+                'include_file'  => $node->includeFile,
+                'file'          => $node->file,
+                'line'          => $node->line,
+                'return_value'  => $returnId,
+            ));
+        });
+
+        return new RedirectResponse('/');
+    }
+
+    public function deletePOST($trace)
+    {
+        if ($this->tl->getTraceInfo($trace)) {
+            unlink($this->tl->directory . '/' . $trace);
+        }
+        return new RedirectResponse('/');
     }
 }

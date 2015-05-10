@@ -1,4 +1,7 @@
-<div class="row">
+<?php
+/* @var $trace string */
+/* @var $file string */
+?><div class="row">
     <div class="col-md-4">
         <?php include 'templates/widgets/trace-search.php'; ?>
         <?php include 'templates/widgets/file-hierarchy.php'; ?>
@@ -6,9 +9,11 @@
     <div class="col-md-8">
         <?php
         use Vtk13\LibXdebugTrace\FileUtil\File;
-        use Vtk13\LibXdebugTrace\Parser\Parser;
         use Vtk13\LibXdebugTrace\Trace\Line;
 
+        /**
+         * @todo Formatters?
+         */
         function lineMenu($trace, $file, $line, $hits)
         {
             $trace = htmlspecialchars($trace);
@@ -26,6 +31,8 @@ HTML;
         }
 
         /**
+         * @todo Formatters?
+         *
          * @param $traceFileName
          * @param Line[] $fileCoverage
          */
@@ -51,16 +58,13 @@ HTML;
             }
         }
 
-        if (isset($_GET['trace']) && isset($_GET['file'])) {
+        if (isset($trace) && isset($file)) {
             try {
-                $file = $fm->getTraceFile($_GET['trace']);
-                $parser = new Parser();
-                $trace = $parser->parse($file);
-                $fileCoverage = $trace->fileCoverage(new File($_GET['file']));
+                $fileCoverage = $fm->getTrace($trace)->fileCoverage(new File($file));
                 ?>
                 <div class="panel panel-default">
-                    <div class="panel-heading">Executed lines in <?php echo $_GET['file']; ?></div>
-                    <div class="panel-body"><?php drawFileUsage($_GET['trace'], $fileCoverage); ?></div>
+                    <div class="panel-heading">Executed lines in <?php echo $file; ?></div>
+                    <div class="panel-body"><?php drawFileUsage($trace, $fileCoverage); ?></div>
                 </div>
             <?php
             } catch (Exception $ex) {

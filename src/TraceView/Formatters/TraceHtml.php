@@ -9,8 +9,10 @@ class TraceHtml
     public static function line($traceName, Line $line)
     {
         $basename = basename($line->file);
+        $href = '/file-trace/view/' . urlencode($traceName) . '/'
+            . urlencode($line->file) .'#line' . $line->line;
         return <<<HTML
-<a title="Jump to source {$line->file}" href="/trace/view?trace={$traceName}&file={$line->file}#line{$line->line}">{$basename}:{$line->line}</a>
+<a title="Jump to source {$line->file}" href="{$href}">{$basename}:{$line->line}</a>
 HTML;
     }
 
@@ -59,7 +61,7 @@ HTML;
             }
             $arguments = implode(', ', $args);
             $nodeId = <<<HTML
-<a title="View stack trace" href="/trace/call?trace={$traceName}&id={$node->callId}">#{$node->callId}</a>
+<a title="View stack trace" href="/file-trace/call?trace={$traceName}&id={$node->callId}">#{$node->callId}</a>
 HTML;
         } else {
             $ts = '';
@@ -69,7 +71,7 @@ HTML;
                 'file'  => $node->file,
                 'line'  => $node->line,
             ];
-            $calls = '<a href="/trace/calls?' . http_build_query($params) . '">View all ' . (isset($node->hits) ? $node->hits : '') .' calls</a>';
+            $calls = '<a href="/file-trace/calls?' . http_build_query($params) . '">View all ' . (isset($node->hits) ? $node->hits : '') .' calls</a>';
             $arguments = '';
             $return = '';
             $nodeId = '';

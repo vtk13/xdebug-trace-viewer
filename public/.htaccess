@@ -1,6 +1,7 @@
 php_flag xdebug.auto_trace 0
-
+php_value memory_limit 256M
+#you need AllowEncodedSlashes NoDecode on virtual host
 RewriteEngine On
-
+RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . /index.php [L,QSA]
