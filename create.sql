@@ -1,13 +1,14 @@
 CREATE TABLE `traceview_nodes` (
   `trace_id` int(10) unsigned NOT NULL,
   `call_id` int(10) unsigned NOT NULL,
+  `parent_id` int(11) NOT NULL,
+  `level` int(11) NOT NULL,
   `time_start` decimal(10,6) NOT NULL,
   `time_end` decimal(10,6) NOT NULL,
   `function` varchar(1024) NOT NULL,
   `include_file` varchar(1024) NOT NULL,
   `file` varchar(1024) NOT NULL,
   `line` int(10) unsigned NOT NULL,
-  `return_value` int(10) unsigned NOT NULL,
   PRIMARY KEY (`trace_id`,`call_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

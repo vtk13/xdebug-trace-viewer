@@ -245,18 +245,18 @@ class FileTraceController extends AbstractController
                 'type'          => $node->getType($node->returnValue),
                 'value'         => $node->returnValue,
             ));
-            $returnId = $db->insertId();
 
             $db->insert('traceview_nodes', array(
                 'trace_id'      => $traceId,
                 'call_id'       => $node->callId,
+                'parent_id'     => $node->parent ? $node->parent->callId : 0,
+                'level'         => $node->level,
                 'time_start'    => $node->timeStart,
                 'time_end'      => $node->timeEnd,
                 'function'      => $node->function,
                 'include_file'  => $node->includeFile,
                 'file'          => $node->file,
                 'line'          => $node->line,
-                'return_value'  => $returnId,
             ));
         });
 

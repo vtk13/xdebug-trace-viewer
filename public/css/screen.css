@@ -68,3 +68,7 @@
 .a.line-menu-close {
     text-decoration: none;
 }
+
+.head-forms form input[type=text] {
+    width: 100%;
+}
